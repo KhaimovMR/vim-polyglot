@@ -66,7 +66,8 @@ endif
 
 syn keyword pythonStatement     break continue del return pass yield global assert lambda with
 syn keyword pythonStatement     raise nextgroup=pythonExClass skipwhite
-syn keyword pythonStatement     def class nextgroup=pythonFunction skipwhite
+syn keyword pythonStatement     def nextgroup=pythonFunction skipwhite
+syn keyword pythonStatement     class nextgroup=pythonClass skipwhite
 if s:Enabled('g:python_highlight_class_vars')
   syn keyword pythonClassVar    self cls
 endif
@@ -87,17 +88,21 @@ if s:Python2Syntax()
   endif
   syn keyword pythonStatement   exec
   syn keyword pythonImport      as
-  syn match   pythonFunction    '[a-zA-Z_][a-zA-Z0-9_]*' display contained
+  syn match   pythonFunction    '[a-z_][a-zA-Z0-9_]*' display contained
 else
   syn keyword pythonStatement   as nonlocal
   syn match   pythonStatement   '\v\.@<!<await>'
   syn match   pythonFunction    '\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*' display contained
+  syn match   pythonStatement   '\<async\s\+class\>' nextgroup=pythonClass skipwhite
   syn match   pythonStatement   '\<async\s\+def\>' nextgroup=pythonFunction skipwhite
   syn match   pythonStatement   '\<async\s\+with\>'
   syn match   pythonStatement   '\<async\s\+for\>'
   syn cluster pythonExpression contains=pythonStatement,pythonRepeat,pythonConditional,pythonOperator,pythonNumber,pythonHexNumber,pythonOctNumber,pythonBinNumber,pythonFloat,pythonString,pythonBytes,pythonBoolean,pythonNone,pythonSingleton,pythonBuiltinObj,pythonBuiltinFunc,pythonBuiltinType
 endif
 
+syn match pythonClass "\%(\%(class\s\)\s*\)\@<=\h\%(\w\|\.\)*" contained nextgroup=pythonClassVars
+syn region pythonClassVars start="(" end=")" contained contains=pythonClassParameters transparent keepend
+syn match pythonClassParameters "[^,\*]*" contained contains=pythonBuiltin,pythonBuiltinObj,pythonBuiltinType,pythonExtraOperatorpythonStatement,pythonBrackets,pythonString,pythonComment skipwhite
 
 "
 " Operators
@@ -418,6 +423,7 @@ if v:version >= 508 || !exists('did_python_syn_inits')
   HiLink pythonRaiseFromStatement   Statement
   HiLink pythonImport           Include
   HiLink pythonFunction         Function
+  HiLink pythonClass            Function
   HiLink pythonConditional      Conditional
   HiLink pythonRepeat           Repeat
   HiLink pythonException        Exception
