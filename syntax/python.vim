@@ -380,7 +380,7 @@ endif
 "
 
 if s:Enabled('g:python_highlight_builtin_types')
-  syn match pythonBuiltinType    '\v\.@<!<%(object|bool|int|float|tuple|str|list|dict|set|frozenset|bytearray|bytes)>'
+  syn match pythonBuiltinType    '\v\.@<!<%(object|bool|int|long|float|tuple|str|list|dict|set|frozenset|bytearray|bytes)>'
 endif
 
 
